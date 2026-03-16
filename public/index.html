@@ -188,7 +188,20 @@
     .slot-header-name { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
 
     /* Search */
-    .search-wrap { margin-bottom: 1rem; }
+    .search-wrap { margin-bottom: 0.6rem; }
+    .filter-row { display: flex; gap: 0.4rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
+    .filter-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-right: 0.25rem; }
+    .filter-pill {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 12px;
+      border-radius: 20px; border: 1px solid var(--border); color: var(--muted);
+      background: transparent; cursor: pointer; transition: all 0.18s;
+    }
+    .filter-pill:hover { border-color: var(--border2); color: var(--text); }
+    .filter-pill.active { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+    .filter-pill.active.f-active { border-color: var(--purple); color: var(--purple-bright); background: rgba(139,92,246,0.08); }
+    .filter-pill.active.f-checkedin { border-color: var(--arrived); color: var(--arrived); background: rgba(52,211,153,0.07); }
+    .filter-count { font-size: 0.58rem; opacity: 0.6; margin-left: 3px; }
     input[type="text"] {
       width: 100%; background: var(--surface); border: 1px solid var(--border);
       color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem;
@@ -378,8 +391,16 @@
       </div>
     </div>
 
-    <div id="search-row" class="search-wrap" style="display:none">
-      <input type="text" id="search-input" placeholder="Search by name, email, or order ID..." oninput="renderOrders()" />
+    <div id="search-row" style="display:none">
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Search by name, email, or order ID..." oninput="renderOrders()" />
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Show</span>
+        <button class="filter-pill f-active active" onclick="setFilter('active')" id="fp-active">Pending <span class="filter-count" id="fc-active"></span></button>
+        <button class="filter-pill f-checkedin" onclick="setFilter('checkedin')" id="fp-checkedin">RR Checked In <span class="filter-count" id="fc-checkedin"></span></button>
+        <button class="filter-pill" onclick="setFilter('all')" id="fp-all">All <span class="filter-count" id="fc-all"></span></button>
+      </div>
     </div>
 
     <div id="orders-area">
@@ -410,6 +431,7 @@
   let currentTourId = null;
   let currentManifest = null;
   let currentMode = 'staff';
+  let currentFilter = 'active'; // 'active' | 'checkedin' | 'all'
   // Track self-check-ins locally keyed by scheduleId->orderId for sidebar pill updates
   let arrivedCounts = {};
 
@@ -639,15 +661,40 @@
     document.getElementById('stat-self').textContent = orders.filter(o => o.selfCheckedIn).length;
   }
 
+  function setFilter(f) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    document.getElementById('fp-' + f).classList.add('active');
+    renderOrders();
+  }
+
   function renderOrders() {
     const search = (document.getElementById('search-input')?.value || '').toLowerCase();
-    let orders = (currentManifest?.Orders || []).filter(o =>
-      !search ||
-      (o.FirstName||'').toLowerCase().includes(search) ||
-      (o.LastName||'').toLowerCase().includes(search) ||
-      (o.Email||'').toLowerCase().includes(search) ||
-      String(o.OrderId).includes(search)
-    );
+    const allOrders = currentManifest?.Orders || [];
+
+    // Update filter counts
+    const countActive = allOrders.filter(o => o.CheckedIn === 0).length;
+    const countCheckedin = allOrders.filter(o => o.CheckedIn > 0).length;
+    const el_a = document.getElementById('fc-active');
+    const el_c = document.getElementById('fc-checkedin');
+    const el_all = document.getElementById('fc-all');
+    if (el_a) el_a.textContent = countActive;
+    if (el_c) el_c.textContent = countCheckedin;
+    if (el_all) el_all.textContent = allOrders.length;
+
+    let orders = allOrders.filter(o => {
+      // Filter by RR check-in status
+      if (currentFilter === 'active' && o.CheckedIn > 0) return false;
+      if (currentFilter === 'checkedin' && o.CheckedIn === 0) return false;
+      // Search
+      if (!search) return true;
+      return (
+        (o.FirstName||'').toLowerCase().includes(search) ||
+        (o.LastName||'').toLowerCase().includes(search) ||
+        (o.Email||'').toLowerCase().includes(search) ||
+        String(o.OrderId).includes(search)
+      );
+    });
     orders.sort((a, b) => (b.selfCheckedIn ? 1 : 0) - (a.selfCheckedIn ? 1 : 0));
 
     if (!orders.length) {
