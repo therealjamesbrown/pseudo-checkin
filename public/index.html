@@ -246,6 +246,14 @@
       padding: 9px 14px; border: 1px solid rgba(52,211,153,0.3); border-radius: 7px; cursor: pointer; transition: all 0.2s;
     }
     .btn-retrieved:hover { background: rgba(52,211,153,0.08); border-color: var(--arrived); }
+    .btn-pos {
+      background: transparent; color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; cursor: pointer; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-pos:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
 
     .state-msg { text-align: center; padding: 4rem 2rem; color: var(--muted); font-size: 0.85rem; }
     .spinner {
@@ -604,9 +612,12 @@
       const fn = (o.FirstName||'').replace(/'/g,"\\'");
       const ln = (o.LastName||'').replace(/'/g,"\\'");
 
+      const posUrl = 'https://sales.rocket-rez.com/RocketOffice/#/pos?id=' + o.OrderId;
+      const posBtn = '<button class="btn-pos" onclick="window.open(\'' + posUrl + '\', \'_blank\')">↗ RR POS</button>';
+
       const actionHtml = o.selfCheckedIn
-        ? '<button class="btn-retrieved" onclick="clearCheckin(' + o.OrderId + ')">✓ Mark Retrieved</button>'
-        : '<button class="btn-arrived" onclick="markArrived(' + o.OrderId + ',\'' + fn + '\',\'' + ln + '\',' + p + ')">Mark Arrived</button>';
+        ? '<button class="btn-retrieved" onclick="clearCheckin(' + o.OrderId + ')">✓ Mark Retrieved</button>' + posBtn
+        : '<button class="btn-arrived" onclick="markArrived(' + o.OrderId + ',\'' + fn + '\',\'' + ln + '\',' + p + ')">Mark Arrived</button>' + posBtn;
 
       card.innerHTML =
         '<div class="card-header">' +
