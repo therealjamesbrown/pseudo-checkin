@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pseudoverse · Admissions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070708;
+      --surface: #0e0e12;
+      --surface2: #16161e;
+      --border: rgba(255,255,255,0.07);
+      --purple: #8B5CF6;
+      --purple-bright: #a78bfa;
+      --purple-glow: rgba(139,92,246,0.25);
+      --text: #f5f5ff;
+      --muted: rgba(245,245,255,0.45);
+      --arrived: #34d399;
+      --arrived-glow: rgba(52,211,153,0.2);
+      --danger: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 0%, rgba(139,92,246,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 100%, rgba(139,92,246,0.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bebas { font-family: 'Bebas Neue', cursive; letter-spacing: 0.05em; }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      background: rgba(7,7,8,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-text { font-family: 'Bebas Neue', cursive; font-size: 1.3rem; letter-spacing: 0.1em; }
+    .logo-sub { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--purple-bright); }
+    .header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    .mode-toggle {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .mode-btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: var(--muted);
+    }
+    .mode-btn.active { background: var(--purple); color: #fff; }
+
+    .clock {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.15rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--purple); color: var(--purple-bright); }
+
+    /* STAFF VIEW */
+    #staff-view { position: relative; z-index: 1; padding-top: 72px; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+
+    .date-row { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    input[type="date"] {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      outline: none;
+    }
+    input[type="date"]:focus { border-color: var(--purple); }
+
+    .btn-primary {
+      background: var(--purple);
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px var(--purple-glow);
+    }
+    .btn-primary:hover { background: var(--purple-bright); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .tab:hover { border-color: var(--purple); color: var(--text); }
+    .tab.active { background: var(--purple); border-color: var(--purple); color: #fff; box-shadow: 0 0 20px var(--purple-glow); }
+    .tab-time { font-size: 0.65rem; font-weight: 400; display: block; opacity: 0.75; margin-top: 2px; }
+
+    .stats { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; min-width: 110px; }
+    .stat-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .stat-val { font-family: 'Bebas Neue', cursive; font-size: 2rem; line-height: 1; margin-top: 4px; }
+    .stat-val.purple { color: var(--purple-bright); }
+    .stat-val.green { color: var(--arrived); }
+    .stat-val.amber { color: #f59e0b; }
+
+    .search-wrap { margin-bottom: 1rem; }
+    input[type="text"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      padding: 10px 16px;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]::placeholder { color: var(--muted); }
+    input[type="text"]:focus { border-color: var(--purple); }
+
+    .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+
+    .order-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+    }
+    .order-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple) 0%, transparent 100%);
+      opacity: 0.5;
+    }
+    .order-card:hover { border-color: rgba(139,92,246,0.35); }
+    .order-card.arrived { border-color: rgba(52,211,153,0.4); box-shadow: 0 0 30px var(--arrived-glow); }
+    .order-card.arrived::before { background: linear-gradient(90deg, var(--arrived), transparent); opacity: 1; }
+
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+    .guest-name { font-family: 'Bebas Neue', cursive; font-size: 1.35rem; letter-spacing: 0.05em; line-height: 1; }
+    .order-id { font-size: 0.68rem; font-weight: 600; color: var(--muted); background: var(--surface2); padding: 3px 8px; border-radius: 4px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .tag { font-size: 0.67rem; font-weight: 600; letter-spacing: 0.04em; padding: 3px 9px; border-radius: 5px; border: 1px solid var(--border); color: var(--muted); }
+    .tag.purple { color: var(--purple-bright); border-color: rgba(139,92,246,0.3); background: rgba(139,92,246,0.08); }
+    .tag.green { color: var(--arrived); border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.07); }
+    .tag.red { color: var(--danger); border-color: rgba(248,113,113,0.3); }
+
+    .email { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.75rem; }
+
+    .retail-row { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem; }
+    .retail-badge { font-size: 0.68rem; color: var(--purple-bright); background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); padding: 3px 8px; border-radius: 5px; }
+
+    .arrived-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 0.75rem;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--arrived); letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .pulse-dot {
+      width: 7px; height: 7px;
+      background: var(--arrived); border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+    .card-actions { display: flex; gap: 0.5rem; }
+    .btn-arrived {
+      flex: 1; background: var(--purple); color: #fff;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 9px 14px; border: none; border-radius: 7px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-arrived:hover { background: var(--purple-bright); box-shadow: 0 0 20px var(--purple-glow); }
+    .btn-retrieved {
+      flex: 1; background: transparent; color: var(--arrived);
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 9px 14px; border: 1px solid rgba(52,211,153,0.3); border-radius: 7px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-retrieved:hover { background: rgba(52,211,153,0.08); border-color: var(--arrived); }
+
+    .state-msg { text-align: center; padding: 4rem 2rem; color: var(--muted); font-size: 0.85rem; }
+    .spinner {
+      display: inline-block; width: 13px; height: 13px;
+      border: 2px solid rgba(139,92,246,0.2); border-top-color: var(--purple);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* LOBBY VIEW */
+    #lobby-view {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: var(--bg);
+      overflow-y: auto;
+      flex-direction: column;
+      align-items: center;
+    }
+    #lobby-view.active { display: flex; }
+
+    .lobby-decor {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(90px);
+    }
+    .orb1 { width: 600px; height: 600px; background: rgba(139,92,246,0.1); top: -150px; left: -150px; animation: drift1 14s ease-in-out infinite alternate; }
+    .orb2 { width: 500px; height: 500px; background: rgba(236,72,153,0.06); bottom: -100px; right: -100px; animation: drift2 18s ease-in-out infinite alternate; }
+    .orb3 { width: 350px; height: 350px; background: rgba(245,158,11,0.05); top: 40%; left: 30%; animation: drift1 22s ease-in-out infinite alternate-reverse; }
+    @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(40px,-30px)} }
+    @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-30px,20px)} }
+
+    .lobby-inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 960px;
+      padding: 4rem 2rem 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .lobby-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--purple-bright); margin-bottom: 0.75rem;
+    }
+    .lobby-headline {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      letter-spacing: 0.08em;
+      line-height: 0.9;
+      text-align: center;
+      background: linear-gradient(135deg, #c4b5fd 0%, #f0abfc 40%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.25rem;
+    }
+    .lobby-sub {
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-weight: 300;
+      color: var(--muted);
+      text-align: center;
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 3.5rem;
+    }
+
+    .lobby-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139,92,246,0.3), transparent);
+      margin-bottom: 2.5rem;
+    }
+
+    .queue-section { width: 100%; }
+    .queue-heading {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--arrived);
+      text-align: center; margin-bottom: 1.25rem;
+    }
+    .queue-empty-box {
+      text-align: center; padding: 3rem;
+      border: 1px solid var(--border); border-radius: 16px;
+      background: var(--surface);
+    }
+    .queue-empty-main { font-family: 'Bebas Neue', cursive; font-size: 1.4rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.1); }
+    .queue-empty-sub { font-size: 0.75rem; color: var(--muted); font-weight: 300; margin-top: 0.35rem; }
+
+    .queue-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+
+    .queue-card {
+      background: var(--surface);
+      border: 1px solid rgba(52,211,153,0.2);
+      border-radius: 14px;
+      padding: 1.5rem 1.25rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(52,211,153,0.06);
+      animation: fadein 0.4s ease;
+    }
+    @keyframes fadein { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+    .queue-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--arrived), rgba(52,211,153,0.2));
+    }
+    .qcard-dot { position: absolute; top: 1.1rem; right: 1.1rem; width: 8px; height: 8px; background: var(--arrived); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    .qcard-name { font-family: 'Bebas Neue', cursive; font-size: 1.5rem; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+    .qcard-party { font-size: 0.7rem; font-weight: 700; color: var(--arrived); letter-spacing: 0.1em; text-transform: uppercase; }
+    .qcard-time { font-size: 0.65rem; color: var(--muted); font-weight: 300; margin-top: 0.4rem; }
+
+    .lobby-footer {
+      width: 100%;
+      text-align: center;
+      padding-top: 2.5rem;
+      font-size: 0.72rem;
+      color: rgba(245,245,255,0.2);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+    }
+
+    .lobby-clock-bg {
+      position: fixed; bottom: 1.5rem; right: 2rem;
+      font-family: 'Bebas Neue', cursive; font-size: 1.8rem;
+      letter-spacing: 0.12em; color: rgba(255,255,255,0.08);
+      pointer-events: none; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <polygon points="12,2 22,20 2,20" stroke="#8B5CF6" stroke-width="1.5" fill="none"/>
+      <polygon points="12,7 18,18 6,18" fill="#8B5CF6" opacity="0.45"/>
+    </svg>
+    <div>
+      <div class="logo-text">Pseudonym</div>
+      <div class="logo-sub">Admissions</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="clock" id="live-clock">00:00:00</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-staff" onclick="setMode('staff')">⚙ Staff</button>
+      <button class="mode-btn" id="btn-lobby" onclick="setMode('lobby')">◈ Lobby Display</button>
+    </div>
+    <button class="btn-ghost" onclick="refreshManifest()" id="refresh-btn">↻ Refresh</button>
+  </div>
+</header>
+
+<!-- STAFF VIEW -->
+<div id="staff-view">
+  <div class="container">
+    <div class="date-row">
+      <input type="date" id="date-input" />
+      <button class="btn-primary" id="load-btn" onclick="loadSchedules()">Load Schedules</button>
+    </div>
+    <div class="tabs" id="schedule-tabs"></div>
+    <div class="stats" id="stats-bar" style="display:none">
+      <div class="stat-card">
+        <div class="stat-label">Reserved</div>
+        <div class="stat-val purple" id="stat-reserved">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">RR Checked In</div>
+        <div class="stat-val green" id="stat-checkedin">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Self-Arrived</div>
+        <div class="stat-val amber" id="stat-self">—</div>
+      </div>
+      <div class="stat-card" style="flex:1;max-width:320px">
+        <div class="stat-label">Experience</div>
+        <div class="stat-val" id="stat-tour" style="font-size:1rem;font-family:'Space Grotesk';font-weight:700;margin-top:6px;line-height:1.3">—</div>
+      </div>
+    </div>
+    <div id="search-row" class="search-wrap" style="display:none">
+      <input type="text" id="search-input" placeholder="Search by name, email, or order ID..." oninput="renderOrders()" />
+    </div>
+    <div id="orders-area">
+      <div class="state-msg">Select a date and load schedules to get started.</div>
+    </div>
+  </div>
+</div>
+
+<!-- LOBBY VIEW -->
+<div id="lobby-view">
+  <div class="lobby-decor">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="lobby-inner">
+    <div class="lobby-eyebrow">Welcome to the</div>
+    <div class="lobby-headline">PSEUDOVERSE</div>
+    <div class="lobby-sub">Make yourself at home. Browse the shop, explore the lobby lounge, and enjoy the space. Our team will come find you shortly.</div>
+    <div class="lobby-divider"></div>
+    <div class="queue-section" id="lobby-queue"></div>
+    <div class="lobby-footer">Need help? Visit our host stand and a team member will assist you.</div>
+  </div>
+  <div class="lobby-clock-bg" id="lobby-clock">00:00:00</div>
+</div>
+
+<script>
+  let currentSchedules = [];
+  let currentScheduleId = null;
+  let currentTourId = null;
+  let currentManifest = null;
+  let currentMode = 'staff';
+
+  function updateClock() {
+    const t = new Date().toLocaleTimeString('en-US', { hour12: false });
+    document.getElementById('live-clock').textContent = t;
+    document.getElementById('lobby-clock').textContent = t;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btn-staff').classList.toggle('active', mode === 'staff');
+    document.getElementById('btn-lobby').classList.toggle('active', mode === 'lobby');
+    document.getElementById('staff-view').style.display = mode === 'staff' ? 'block' : 'none';
+    const lv = document.getElementById('lobby-view');
+    if (mode === 'lobby') { lv.classList.add('active'); renderLobby(); }
+    else { lv.classList.remove('active'); }
+  }
+
+  document.getElementById('date-input').value = new Date().toISOString().split('T')[0];
+
+  async function loadSchedules() {
+    const date = document.getElementById('date-input').value;
+    if (!date) return;
+    const btn = document.getElementById('load-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Loading...';
+    document.getElementById('schedule-tabs').innerHTML = '';
+    document.getElementById('stats-bar').style.display = 'none';
+    document.getElementById('search-row').style.display = 'none';
+    document.getElementById('orders-area').innerHTML = '<div class="state-msg"><span class="spinner"></span>Fetching schedules...</div>';
+    try {
+      const res = await fetch('/api/schedules?date=' + date);
+      const data = await res.json();
+      const all = (data.Sites || []).flatMap(s => s.Schedules || []);
+      currentSchedules = all;
+      if (!all.length) {
+        document.getElementById('orders-area').innerHTML = '<div class="state-msg">No schedules found for this date.</div>';
+        return;
+      }
+      renderTabs(all);
+      selectSchedule(all[0].ScheduleId, all[0].TourId, all[0].TourName);
+    } catch(e) {
+      document.getElementById('orders-area').innerHTML = '<div class="state-msg">Error: ' + e.message + '</div>';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Load Schedules';
+    }
+  }
+
+  function renderTabs(schedules) {
+    const c = document.getElementById('schedule-tabs');
+    c.innerHTML = '';
+    schedules.forEach(s => {
+      const b = document.createElement('button');
+      b.className = 'tab' + (s.ScheduleId === currentScheduleId ? ' active' : '');
+      b.dataset.id = s.ScheduleId;
+      b.innerHTML = s.TourName + '<span class="tab-time">' + s.StartTime + ' – ' + s.EndTime + '</span>';
+      b.onclick = () => selectSchedule(s.ScheduleId, s.TourId, s.TourName);
+      c.appendChild(b);
+    });
+  }
+
+  async function selectSchedule(scheduleId, tourId) {
+    currentScheduleId = scheduleId;
+    currentTourId = tourId;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.id == scheduleId));
+    await loadManifest();
+  }
+
+  async function loadManifest() {
+    const date = document.getElementById('date-input').value;
+    document.getElementById('orders-area').innerHTML = '<div class="state-msg"><span class="spinner"></span>Loading manifest...</div>';
+    document.getElementById('stats-bar').style.display = 'none';
+    document.getElementById('search-row').style.display = 'none';
+    try {
+      const res = await fetch('/api/manifest?tourId=' + currentTourId + '&scheduleId=' + currentScheduleId + '&date=' + date);
+      currentManifest = await res.json();
+      updateStats();
+      document.getElementById('search-row').style.display = 'block';
+      renderOrders();
+      if (currentMode === 'lobby') renderLobby();
+    } catch(e) {
+      document.getElementById('orders-area').innerHTML = '<div class="state-msg">Error: ' + e.message + '</div>';
+    }
+  }
+
+  async function refreshManifest() {
+    if (!currentScheduleId) return;
+    const btn = document.getElementById('refresh-btn');
+    btn.textContent = '↻ Refreshing...';
+    await loadManifest();
+    btn.textContent = '↻ Refresh';
+  }
+
+  function updateStats() {
+    const m = currentManifest;
+    if (!m) return;
+    document.getElementById('stats-bar').style.display = 'flex';
+    document.getElementById('stat-reserved').textContent = m.TotalReserved ?? '—';
+    document.getElementById('stat-checkedin').textContent = m.CheckedIn ?? '—';
+    document.getElementById('stat-self').textContent = (m.Orders||[]).filter(o => o.selfCheckedIn).length;
+    document.getElementById('stat-tour').textContent = m.TourName || '—';
+  }
+
+  function renderOrders() {
+    const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+    let orders = (currentManifest?.Orders || []).filter(o =>
+      !search ||
+      (o.FirstName||'').toLowerCase().includes(search) ||
+      (o.LastName||'').toLowerCase().includes(search) ||
+      (o.Email||'').toLowerCase().includes(search) ||
+      String(o.OrderId).includes(search)
+    );
+    orders.sort((a, b) => (b.selfCheckedIn ? 1 : 0) - (a.selfCheckedIn ? 1 : 0));
+
+    if (!orders.length) {
+      document.getElementById('orders-area').innerHTML = '<div class="state-msg">No matching orders.</div>';
+      updateStats();
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'orders-grid';
+    orders.forEach(o => {
+      const p = (o.Qty1||0)+(o.Qty2||0)+(o.Qty3||0)+(o.Qty4||0)+(o.Qty5||0);
+      const card = document.createElement('div');
+      card.className = 'order-card' + (o.selfCheckedIn ? ' arrived' : '');
+
+      const arrivedHtml = o.selfCheckedIn && o.selfCheckedInAt
+        ? '<div class="arrived-row"><span class="pulse-dot"></span>Party Arrived · ' +
+          new Date(o.selfCheckedInAt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}) + '</div>'
+        : '';
+
+      const retailHtml = (o.OrderRetail||[]).map(r =>
+        '<span class="retail-badge">🛍 ' + r.ItemName + ' ×' + r.Qty + '</span>'
+      ).join('');
+
+      const fn = (o.FirstName||'').replace(/'/g,"\\'");
+      const ln = (o.LastName||'').replace(/'/g,"\\'");
+
+      const actionHtml = o.selfCheckedIn
+        ? '<button class="btn-retrieved" onclick="clearCheckin(' + o.OrderId + ')">✓ Mark Retrieved</button>'
+        : '<button class="btn-arrived" onclick="markArrived(' + o.OrderId + ',\'' + fn + '\',\'' + ln + '\',' + p + ')">Mark Arrived</button>';
+
+      card.innerHTML =
+        '<div class="card-header">' +
+          '<div class="guest-name">' + (o.FirstName||'') + ' ' + (o.LastName||'') + '</div>' +
+          '<div class="order-id">#' + o.OrderId + '</div>' +
+        '</div>' +
+        (o.Email ? '<div class="email">' + o.Email + '</div>' : '') +
+        '<div class="tags">' +
+          '<span class="tag purple">Party of ' + p + '</span>' +
+          '<span class="tag">' + o.OrderTotal + '</span>' +
+          (o.IsPaid ? '<span class="tag green">✓ Paid</span>' : '<span class="tag red">⚠ Unpaid</span>') +
+          (o.CheckedIn > 0 ? '<span class="tag green">RR ✓ ' + o.CheckedIn + '</span>' : '') +
+        '</div>' +
+        (retailHtml ? '<div class="retail-row">' + retailHtml + '</div>' : '') +
+        arrivedHtml +
+        '<div class="card-actions">' + actionHtml + '</div>';
+
+      grid.appendChild(card);
+    });
+
+    document.getElementById('orders-area').innerHTML = '';
+    document.getElementById('orders-area').appendChild(grid);
+    updateStats();
+  }
+
+  function renderLobby() {
+    const arrived = (currentManifest?.Orders || []).filter(o => o.selfCheckedIn);
+    const area = document.getElementById('lobby-queue');
+
+    if (!arrived.length) {
+      area.innerHTML =
+        '<div class="queue-heading">Awaiting Guests</div>' +
+        '<div class="queue-empty-box">' +
+          '<div class="queue-empty-main">— Lobby Clear —</div>' +
+          '<div class="queue-empty-sub">All parties have been retrieved or are on their way.</div>' +
+        '</div>';
+      return;
+    }
+
+    area.innerHTML = '<div class="queue-heading">Your Crew is on the Way</div>';
+    const grid = document.createElement('div');
+    grid.className = 'queue-grid';
+    arrived.forEach(o => {
+      const p = (o.Qty1||0)+(o.Qty2||0)+(o.Qty3||0)+(o.Qty4||0)+(o.Qty5||0);
+      const t = o.selfCheckedInAt
+        ? new Date(o.selfCheckedInAt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})
+        : '';
+      const card = document.createElement('div');
+      card.className = 'queue-card';
+      card.innerHTML =
+        '<div class="qcard-dot"></div>' +
+        '<div class="qcard-name">' + (o.FirstName||'') + ' ' + (o.LastName||'') + '</div>' +
+        '<div class="qcard-party">Party of ' + p + '</div>' +
+        (t ? '<div class="qcard-time">Checked in at ' + t + '</div>' : '');
+      grid.appendChild(card);
+    });
+    area.appendChild(grid);
+  }
+
+  async function markArrived(orderId, firstName, lastName, partySize) {
+    await fetch('/api/checkin', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ scheduleId: currentScheduleId, orderId, firstName, lastName, partySize })
+    });
+    const o = currentManifest.Orders.find(o => o.OrderId === orderId);
+    if (o) { o.selfCheckedIn = true; o.selfCheckedInAt = new Date().toISOString(); }
+    renderOrders();
+    if (currentMode === 'lobby') renderLobby();
+  }
+
+  async function clearCheckin(orderId) {
+    await fetch('/api/checkin/' + currentScheduleId + '/' + orderId, { method: 'DELETE' });
+    const o = currentManifest.Orders.find(o => o.OrderId === orderId);
+    if (o) { o.selfCheckedIn = false; o.selfCheckedInAt = null; }
+    renderOrders();
+    if (currentMode === 'lobby') renderLobby();
+  }
+
+  loadSchedules();
+</script>
+</body>
+</html>
